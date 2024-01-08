@@ -916,11 +916,16 @@ ChestTableWithContentPresenter >> selectedChest [
 
 	self flag: 'to do with polymorphism'.
 
-	(activePresenter isNotNil and: [ 
-		 activePresenter == chestWithContentTreeTable ]) ifTrue: [ 
+	(activePresenter isNotNil and: [
+		 activePresenter == chestWithContentTreeTable ]) ifTrue: [
 		^ chestWithContentTreeTable selectedItem isChest
 			  ifTrue: [ chestWithContentTreeTable selectedItem ]
-			  ifFalse: [ nil ] ].
+			  ifFalse: [
+				  chestWithContentTreeTable roots
+					  detect: [ :root |
+						  (chestWithContentTreeTable childrenFor: root)
+							  identityIncludes: chestWithContentTreeTable selectedItem ]
+					  ifNone: [ nil ] ] ].
 	^ chestsTable selection selectedItem
 ]
 
